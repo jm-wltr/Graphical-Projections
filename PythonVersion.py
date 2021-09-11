@@ -16,7 +16,7 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 import matplotlib.pyplot as plt
 
 # Coordinates of vertices
-points = np.array([[-1, -1, -1],
+vertices = np.array([[-1, -1, -1],
                   [1, -1, -1 ],
                   [1, 1, -1],
                   [-1, 1, -1],
@@ -44,29 +44,15 @@ ZyawMatrix = np.mat([[math.cos(psi), math.sin(psi), 0], \
                        
 # Rotate the cube
 Z = np.zeros((8,3))
-for i in range(8): Z[i,:] = np.dot(points[i,:],XrollMatrix)
+for i in range(8): Z[i,:] = np.dot(vertices[i,:],XrollMatrix)
 for i in range(8): Z[i,:] = np.dot(Z[i,:],YpitchMatrix)
 for i in range(8): Z[i,:] = np.dot(Z[i,:],ZyawMatrix)
 
 
 ## Make the plot
-
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 ax.set_box_aspect([1,1,1])
-
-#Plot the points
-ax.scatter3D(Z[:, 0], Z[:, 1], Z[:, 2])
-
-# Plot the faces
-verts = [[Z[0],Z[1],Z[2],Z[3]],
-  [Z[4],Z[5],Z[6],Z[7]], 
-  [Z[0],Z[1],Z[5],Z[4]], 
-  [Z[2],Z[3],Z[7],Z[6]], 
-  [Z[1],Z[2],Z[6],Z[5]],
-  [Z[4],Z[7],Z[3],Z[0]]]
-
-ax.add_collection3d(Poly3DCollection(verts, facecolors='cyan', linewidths=1, edgecolors='blue', alpha=.25))
 
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
@@ -80,4 +66,18 @@ ax.locator_params(axis='x', nbins=3)
 ax.locator_params(axis='y', nbins=3)
 ax.locator_params(axis='z', nbins=3)
 
+# Plot the vertices
+ax.scatter3D(Z[:, 0], Z[:, 1], Z[:, 2])
+
+# Plot the edges and faces
+faces = [[Z[0],Z[1],Z[2],Z[3]],
+  [Z[4],Z[5],Z[6],Z[7]], 
+  [Z[0],Z[1],Z[5],Z[4]], 
+  [Z[2],Z[3],Z[7],Z[6]], 
+  [Z[1],Z[2],Z[6],Z[5]],
+  [Z[4],Z[7],Z[3],Z[0]]]
+
+ax.add_collection3d(Poly3DCollection(faces, facecolors='cyan', linewidths=1, edgecolors='blue', alpha=.25))
+
+# Show 3D Plot
 plt.show()
