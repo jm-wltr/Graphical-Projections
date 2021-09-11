@@ -14,6 +14,7 @@ import math
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
 
 # Coordinates of vertices
 vertices = np.array([[-1, -1, -1],
@@ -51,7 +52,7 @@ for i in range(8): Z[i,:] = np.dot(Z[i,:],ZyawMatrix)
 
 ## Make the plot
 fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
+ax = fig.add_subplot(121, projection='3d')
 ax.set_box_aspect([1,1,1])
 
 ax.set_xlabel('X')
@@ -79,5 +80,37 @@ faces = [[Z[0],Z[1],Z[2],Z[3]],
 
 ax.add_collection3d(Poly3DCollection(faces, facecolors='cyan', linewidths=1, edgecolors='blue', alpha=.25))
 
-# Show 3D Plot
+# Orthographic projection onto XY plane
+ortXY = np.mat([[1, 0, 0], \
+                      [0, 1, 0]])
+
+project = np.zeros((8,3))
+for i in range(8): project[i,:] = np.dot(Z[i,(1,2)], ortXY)
+project = np.delete(project, 2, 1)
+
+# Plot 2D projection
+ax2 = fig.add_subplot(122)
+ax2.set_aspect('equal', adjustable='box')
+
+ax2.set_xlim([-2, 2])
+ax2.set_ylim([-2, 2])
+
+ax2.set_xlabel('X')
+ax2.set_ylabel('Y')
+
+ax2.scatter(project[:, 0], project[:, 1])
+
+faces2D = [[project[7],project[4],project[5],project[6]],
+  [project[1],project[2],project[3],project[0]], 
+  [project[4],project[0],project[3],project[7]], 
+  [project[5],project[1],project[2],project[6]], 
+  [project[7],project[3],project[2],project[6]],
+  [project[0],project[4],project[5],project[1]]]
+
+for i in range(6):
+    poly = Polygon(faces2D[i], facecolor='cyan', edgecolor='blue', alpha = 0.25)
+    ax2.add_patch(poly)
+
+# Show plot
+plt.subplots_adjust(wspace = 1)
 plt.show()
