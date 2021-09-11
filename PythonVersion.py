@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Sep  8 13:55:44 2021
-@author: Jaimew
+Created on Sat Sep 11 14:22:08 2021
+
+@author: jaimewalter
 """
 
 ## Visualize a cube that rotates in 3D, and its 2D projection. Made with linear transformations.
@@ -25,7 +26,6 @@ points = np.array([[-1, -1, -1],
                   [-1, 1, 1]])
                        
 # Define rotation matrices
-
 phi = math.pi / 9
 theta = 19 * math.pi / 90
 psi = 2 * math.pi /45
@@ -66,10 +66,18 @@ verts = [[Z[0],Z[1],Z[2],Z[3]],
   [Z[1],Z[2],Z[6],Z[5]],
   [Z[4],Z[7],Z[3],Z[0]]]
 
-ax.add_collection3d(Poly3DCollection(verts, facecolors='cyan', linewidths=1, edgecolors='r', alpha=.25))
+ax.add_collection3d(Poly3DCollection(verts, facecolors='cyan', linewidths=1, edgecolors='blue', alpha=.25))
 
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('Z')
+
+ax.set_xlim([-1.5, 1.5])
+ax.set_ylim([-1.5, 1.5])
+ax.set_zlim([-1.5, 1.5])
+
+ax.locator_params(axis='x', nbins=3)
+ax.locator_params(axis='y', nbins=3)
+ax.locator_params(axis='z', nbins=3)
 
 plt.show()
