@@ -27,9 +27,9 @@ vertices = np.array([[-1, -1, -1],
                   [-1, 1, 1]])
                        
 # Define rotation matrices
-phi = math.pi / 9
-theta = 19 * math.pi / 90
-psi = 2 * math.pi /45
+phi = 0
+theta = 0
+psi = 0
 
 XrollMatrix = np.mat([[1, 0, 0], \
                       [0, math.cos(phi), math.sin(phi)], \
@@ -52,7 +52,7 @@ for i in range(8): Z[i,:] = np.dot(Z[i,:],ZyawMatrix)
 
 ## Make the plot
 fig = plt.figure()
-ax = fig.add_subplot(121, projection='3d')
+ax = fig.add_subplot(221, projection='3d', proj_type = "ortho", azim = 45, elev = 35, title="Isometric")
 ax.set_box_aspect([1,1,1])
 
 ax.set_xlabel('X')
@@ -80,37 +80,79 @@ faces = [[Z[0],Z[1],Z[2],Z[3]],
 
 ax.add_collection3d(Poly3DCollection(faces, facecolors='cyan', linewidths=1, edgecolors='blue', alpha=.25))
 
-# Orthographic projection onto XY plane
+# Orthographic views
 ortXY = np.mat([[1, 0, 0], \
-                      [0, 1, 0]])
+               [0, 1, 0]])
+ortXZ = np.mat([[1, 0, 0], \
+                [0, 0, 1]])
+ortYZ = np.mat([[0, 1, 0], \
+                [0, 0, 1]])
 
-project = np.zeros((8,3))
-for i in range(8): project[i,:] = np.dot(Z[i,(1,2)], ortXY)
-project = np.delete(project, 2, 1)
+XY = np.zeros((8,2))
+for i in range(8): XY[i,:] = np.dot(ortXY, Z[i,:])
+#XY = np.delete(XY, 2, 1)
+XZ = np.zeros((8,2))
+for i in range(8): XZ[i,:] = np.dot(ortXZ, Z[i,:])
+#XZ = np.delete(XZ, 1, 1)
+YZ = np.zeros((8,2))
+for i in range(8): YZ[i,:] = np.dot(ortYZ, Z[i,:])
+#YZ = np.delete(YZ, 0, 1)
 
-# Plot 2D projection
-ax2 = fig.add_subplot(122)
+# Plot 2D views
+ax2 = fig.add_subplot(222, title="Top")
 ax2.set_aspect('equal', adjustable='box')
+ax3 = fig.add_subplot(224, title="Front")
+ax3.set_aspect('equal', adjustable='box')
+ax4 = fig.add_subplot(223, title="Side")
+ax4.set_aspect('equal', adjustable='box')
 
 ax2.set_xlim([-2, 2])
 ax2.set_ylim([-2, 2])
+ax3.set_xlim([-2, 2])
+ax3.set_ylim([-2, 2])
+ax4.set_xlim([-2, 2])
+ax4.set_ylim([-2, 2])
 
 ax2.set_xlabel('X')
 ax2.set_ylabel('Y')
+ax3.set_xlabel('X')
+ax3.set_ylabel('Z')
+ax4.set_xlabel('Y')
+ax4.set_ylabel('Z')
 
-ax2.scatter(project[:, 0], project[:, 1])
+ax2.scatter(XY[:, 0], XY[:, 1])
+ax3.scatter(XZ[:, 0], XZ[:, 1])
+ax4.scatter(YZ[:, 0], YZ[:, 1])
 
-faces2D = [[project[7],project[4],project[5],project[6]],
-  [project[1],project[2],project[3],project[0]], 
-  [project[4],project[0],project[3],project[7]], 
-  [project[5],project[1],project[2],project[6]], 
-  [project[7],project[3],project[2],project[6]],
-  [project[0],project[4],project[5],project[1]]]
+facesXY = [[XY[7],XY[4],XY[5],XY[6]],
+  [XY[1],XY[2],XY[3],XY[0]], 
+  [XY[4],XY[0],XY[3],XY[7]], 
+  [XY[5],XY[1],XY[2],XY[6]], 
+  [XY[7],XY[3],XY[2],XY[6]],
+  [XY[0],XY[4],XY[5],XY[1]]]
+facesXZ = [[XZ[7],XZ[4],XZ[5],XZ[6]],
+  [XZ[1],XZ[2],XZ[3],XZ[0]], 
+  [XZ[4],XZ[0],XZ[3],XZ[7]], 
+  [XZ[5],XZ[1],XZ[2],XZ[6]], 
+  [XZ[7],XZ[3],XZ[2],XZ[6]],
+  [XZ[0],XZ[4],XZ[5],XZ[1]]]
+facesYZ = [[YZ[7],YZ[4],YZ[5],YZ[6]],
+  [YZ[1],YZ[2],YZ[3],YZ[0]], 
+  [YZ[4],YZ[0],YZ[3],YZ[7]], 
+  [YZ[5],YZ[1],YZ[2],YZ[6]], 
+  [YZ[7],YZ[3],YZ[2],YZ[6]],
+  [YZ[0],YZ[4],YZ[5],YZ[1]]]
 
 for i in range(6):
-    poly = Polygon(faces2D[i], facecolor='cyan', edgecolor='blue', alpha = 0.25)
+    poly = Polygon(facesXY[i], facecolor='cyan', edgecolor='blue', alpha = 0.25)
     ax2.add_patch(poly)
-
+for i in range(6):
+    poly = Polygon(facesXZ[i], facecolor='cyan', edgecolor='blue', alpha = 0.25)
+    ax3.add_patch(poly)
+for i in range(6):
+    poly = Polygon(facesYZ[i], facecolor='cyan', edgecolor='blue', alpha = 0.25)
+    ax4.add_patch(poly)
+    
 # Show plot
-plt.subplots_adjust(wspace = 1)
+plt.subplots_adjust(wspace = 0.5, hspace = 0.5)
 plt.show()
