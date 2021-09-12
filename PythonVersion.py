@@ -17,7 +17,7 @@ from matplotlib.patches import Polygon
 from matplotlib.widgets import Slider, Button
 
 # Define rotation matrices
-phi = 2
+phi = 0
 theta = 0
 psi = 0
 
@@ -149,7 +149,7 @@ ax3.set_ylabel('Z')
 ax4.set_xlabel('Y')
 ax4.set_ylabel('Z')
 
-plt.subplots_adjust(bottom=0.25)
+plt.subplots_adjust(bottom=0.3)
 
 # Show plot
 plt.subplots_adjust(wspace = 0.5, hspace = 0.5)
@@ -212,18 +212,38 @@ def plot(Z, XY, XZ, YZ, facesXY, facesXZ, facesYZ, faces):
     
 plot(Z, XY, XZ, YZ, facesXY, facesXZ, facesYZ, faces)
     
-axphi = plt.axes([0.19, 0.1, 0.65, 0.03], facecolor='lightgoldenrodyellow')
+axphi = plt.axes([0.19, 0.15, 0.65, 0.03], facecolor='lightgoldenrodyellow')
 phi_slider = Slider(
     ax=axphi,
     label='Phi [rad]',
     valmin=0,
-    valmax=3,
+    valmax=1.57,
     valinit=phi,
+)
+
+axtheta = plt.axes([0.19, 0.1, 0.65, 0.03], facecolor='lightgoldenrodyellow')
+theta_slider = Slider(
+    ax=axtheta,
+    label='Theta [rad]',
+    valmin=0,
+    valmax=1.57,
+    valinit=theta,
+)
+
+axpsi = plt.axes([0.19, 0.05, 0.65, 0.03], facecolor='lightgoldenrodyellow')
+psi_slider = Slider(
+    ax=axpsi,
+    label='Psi [rad]',
+    valmin=0,
+    valmax=1.57,
+    valinit=psi,
 )
 
 # The function to be called anytime a slider's value changes
 def update(val):
     phi = phi_slider.val
+    theta = theta_slider.val
+    psi = psi_slider.val
     results = rotate(phi, theta, psi)
     Z = results[0]
     XY = results[1]
@@ -238,3 +258,5 @@ def update(val):
 
 # register the update function with each slider
 phi_slider.on_changed(update)
+theta_slider.on_changed(update)
+psi_slider.on_changed(update)
