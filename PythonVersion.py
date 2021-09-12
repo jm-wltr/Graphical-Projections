@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Sep 11 14:22:08 2021
-
 @author: jaimewalter
 """
 
@@ -157,6 +156,42 @@ plt.subplots_adjust(wspace = 0.5, hspace = 0.5)
 plt.show()
 
 def plot(Z, XY, XZ, YZ, facesXY, facesXZ, facesYZ, faces):
+    ax.clear()
+    ax2.clear()
+    ax3.clear()
+    ax4.clear()
+    
+    
+    ax.set_box_aspect([1,1,1])
+
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+    
+    ax.set_xlim([-1.5, 1.5])
+    ax.set_ylim([-1.5, 1.5])
+    ax.set_zlim([-1.5, 1.5])
+    
+    ax.locator_params(axis='x', nbins=3)
+    ax.locator_params(axis='y', nbins=3)
+    ax.locator_params(axis='z', nbins=3)
+    
+    ax2.set_xlim([-2, 2])
+    ax2.set_ylim([-2, 2])
+    ax3.set_xlim([-2, 2])
+    ax3.set_ylim([-2, 2])
+    ax4.set_xlim([-2, 2])
+    ax4.set_ylim([-2, 2])
+    
+    ax2.set_xlabel('X')
+    ax2.set_ylabel('Y')
+    ax3.set_xlabel('X')
+    ax3.set_ylabel('Z')
+    ax4.set_xlabel('Y')
+    ax4.set_ylabel('Z')
+        
+    
+    
     ax.scatter3D(Z[:, 0], Z[:, 1], Z[:, 2])
 
     ax.add_collection3d(Poly3DCollection(faces, facecolors='cyan', linewidths=1, edgecolors='blue', alpha=.25))
@@ -203,5 +238,3 @@ def update(val):
 
 # register the update function with each slider
 phi_slider.on_changed(update)
-    
-
