@@ -115,20 +115,9 @@ faces = results[7]
 
  ## Make the plot
 fig = plt.figure()
+
 ax = fig.add_subplot(221, projection='3d', proj_type = "ortho", azim = -45, elev = 35, title="Isometric")
 ax.set_box_aspect([1,1,1])
-
-ax.set_xlabel('X')
-ax.set_ylabel('Y')
-ax.set_zlabel('Z')
-
-ax.set_xlim([-1.5, 1.5])
-ax.set_ylim([-1.5, 1.5])
-ax.set_zlim([-1.5, 1.5])
-
-ax.locator_params(axis='x', nbins=3)
-ax.locator_params(axis='y', nbins=3)
-ax.locator_params(axis='z', nbins=3)
 
 ax2 = fig.add_subplot(222, title="Top")
 ax2.set_aspect('equal', adjustable='box')
@@ -136,20 +125,6 @@ ax3 = fig.add_subplot(224, title="Front")
 ax3.set_aspect('equal', adjustable='box')
 ax4 = fig.add_subplot(223, title="Side")
 ax4.set_aspect('equal', adjustable='box')
-
-ax2.set_xlim([-2, 2])
-ax2.set_ylim([-2, 2])
-ax3.set_xlim([-2, 2])
-ax3.set_ylim([-2, 2])
-ax4.set_xlim([-2, 2])
-ax4.set_ylim([-2, 2])
-
-ax2.set_xlabel('X')
-ax2.set_ylabel('Y')
-ax3.set_xlabel('X')
-ax3.set_ylabel('Z')
-ax4.set_xlabel('Y')
-ax4.set_ylabel('Z')
 
 plt.subplots_adjust(bottom=0.3)
 plt.subplots_adjust(wspace = 0.5, hspace = 0.5)
@@ -165,6 +140,8 @@ def plot(Z, XY, XZ, YZ, facesXY, facesXZ, facesYZ, faces):
     ax4.clear() 
     
     ax.set_box_aspect([1,1,1])
+    
+    ax.set_title("Isometric")
 
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
@@ -184,6 +161,10 @@ def plot(Z, XY, XZ, YZ, facesXY, facesXZ, facesYZ, faces):
     ax3.set_ylim([-2, 2])
     ax4.set_xlim([-2, 2])
     ax4.set_ylim([-2, 2])
+    
+    ax2.set_title("Top")
+    ax3.set_title("Front")
+    ax4.set_title("Side")
     
     ax2.set_xlabel('X')
     ax2.set_ylabel('Y')
