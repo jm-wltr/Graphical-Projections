@@ -5,8 +5,7 @@ Created on Sat Sep 11 14:22:08 2021
 @author: jaimewalter
 """
 
-## Visualize a cube that rotates in 3D, and its 2D projection. Made with linear transformations.
-## This file only generates the coordinates of the vertices of the rotated cube and plots them in 3D.
+## Visualize a cube that rotates in 3D, and its 2D orthographic projections. Made with linear transformations.
 
 import numpy as np
 import math
@@ -16,13 +15,14 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from matplotlib.widgets import Slider, Button
 
-# Define rotation matrices
+# Assign angles of rotation
 phi = 0
 theta = 0
 psi = 0
 
+# Create function that generates coordinates of the vertices of the cube after rotating.
 def rotate(phi, theta, psi):
-    # Coordinates of vertices
+    # Vertex coordinates of original cube
     vertices = np.array([[-1, -1, -1],
                       [1, -1, -1 ],
                       [1, 1, -1],
@@ -32,6 +32,7 @@ def rotate(phi, theta, psi):
                       [1, 1, 1],
                       [-1, 1, 1]])
     
+    # Rotation matrices
     XrollMatrix = np.mat([[1, 0, 0], \
                           [0, math.cos(phi), math.sin(phi)], \
                           [0, -math.sin(phi), math.cos(phi)]])
@@ -43,14 +44,14 @@ def rotate(phi, theta, psi):
     ZyawMatrix = np.mat([[math.cos(psi), math.sin(psi), 0], \
                           [-math.sin(psi), math.cos(psi), 0], \
                           [0, 0, 1]])
-                           
-    # Rotate the cube
+        
+    # Generate vertex coords of rotated cube
     Z = np.zeros((8,3))
     for i in range(8): Z[i,:] = np.dot(vertices[i,:],XrollMatrix)
     for i in range(8): Z[i,:] = np.dot(Z[i,:],YpitchMatrix)
     for i in range(8): Z[i,:] = np.dot(Z[i,:],ZyawMatrix)
     
-    # Plot the edges and faces
+    # Vertices in each face of the cube
     faces = [[Z[0],Z[1],Z[2],Z[3]],
       [Z[4],Z[5],Z[6],Z[7]], 
       [Z[0],Z[1],Z[5],Z[4]], 
@@ -58,7 +59,7 @@ def rotate(phi, theta, psi):
       [Z[1],Z[2],Z[6],Z[5]],
       [Z[4],Z[7],Z[3],Z[0]]]
     
-    # Orthographic views
+    # Projection matrices
     ortXY = np.mat([[1, 0, 0], \
                    [0, 1, 0]])
     ortXZ = np.mat([[1, 0, 0], \
@@ -66,6 +67,7 @@ def rotate(phi, theta, psi):
     ortYZ = np.mat([[0, 1, 0], \
                     [0, 0, 1]])
     
+    # Generate new coordinates and faces
     XY = np.zeros((8,2))
     for i in range(8): XY[i,:] = np.dot(ortXY, Z[i,:])
     #XY = np.delete(XY, 2, 1)
@@ -97,9 +99,10 @@ def rotate(phi, theta, psi):
       [YZ[7],YZ[3],YZ[2],YZ[6]],
       [YZ[0],YZ[4],YZ[5],YZ[1]]]
     
+    # Return all important values
     return Z, XY, XZ, YZ, facesXY, facesXZ, facesYZ, faces
     
-
+# Get values from rotate()
 results = rotate(phi, theta, psi)
 Z = results[0]
 XY = results[1]
@@ -127,7 +130,6 @@ ax.locator_params(axis='x', nbins=3)
 ax.locator_params(axis='y', nbins=3)
 ax.locator_params(axis='z', nbins=3)
 
-
 ax2 = fig.add_subplot(222, title="Top")
 ax2.set_aspect('equal', adjustable='box')
 ax3 = fig.add_subplot(224, title="Front")
@@ -150,17 +152,17 @@ ax4.set_xlabel('Y')
 ax4.set_ylabel('Z')
 
 plt.subplots_adjust(bottom=0.3)
-
-# Show plot
 plt.subplots_adjust(wspace = 0.5, hspace = 0.5)
+
 plt.show()
 
+# Define the function for updating the plot
 def plot(Z, XY, XZ, YZ, facesXY, facesXZ, facesYZ, faces):
+    # Clear previous points
     ax.clear()
     ax2.clear()
     ax3.clear()
-    ax4.clear()
-    
+    ax4.clear() 
     
     ax.set_box_aspect([1,1,1])
 
@@ -189,9 +191,8 @@ def plot(Z, XY, XZ, YZ, facesXY, facesXZ, facesYZ, faces):
     ax3.set_ylabel('Z')
     ax4.set_xlabel('Y')
     ax4.set_ylabel('Z')
-        
     
-    
+    # Plot new graphs
     ax.scatter3D(Z[:, 0], Z[:, 1], Z[:, 2])
 
     ax.add_collection3d(Poly3DCollection(faces, facecolors='cyan', linewidths=1, edgecolors='blue', alpha=.25))
@@ -209,9 +210,11 @@ def plot(Z, XY, XZ, YZ, facesXY, facesXZ, facesYZ, faces):
     for i in range(6):
         poly = Polygon(facesYZ[i], facecolor='cyan', edgecolor='blue', alpha = 0.25)
         ax4.add_patch(poly)
-    
+
+# Make the first plot
 plot(Z, XY, XZ, YZ, facesXY, facesXZ, facesYZ, faces)
-    
+
+#Create sliders
 axphi = plt.axes([0.19, 0.15, 0.65, 0.03], facecolor='lightgoldenrodyellow')
 phi_slider = Slider(
     ax=axphi,
@@ -256,7 +259,8 @@ def update(val):
     plot(Z, XY, XZ, YZ, facesXY, facesXZ, facesYZ, faces)
 
 
-# register the update function with each slider
+# Register the update function with each slider
 phi_slider.on_changed(update)
 theta_slider.on_changed(update)
 psi_slider.on_changed(update)
+
