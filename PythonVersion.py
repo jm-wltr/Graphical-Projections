@@ -186,3 +186,22 @@ phi_slider = Slider(
     valinit=phi,
 )
 
+# The function to be called anytime a slider's value changes
+def update(val):
+    phi = phi_slider.val
+    results = rotate(phi, theta, psi)
+    Z = results[0]
+    XY = results[1]
+    XZ = results[2]
+    YZ = results[3]
+    facesXY = results[4]
+    facesXZ = results[5]
+    facesYZ = results[6]
+    faces = results[7]
+    plot(Z, XY, XZ, YZ, facesXY, facesXZ, facesYZ, faces)
+
+
+# register the update function with each slider
+phi_slider.on_changed(update)
+    
+
